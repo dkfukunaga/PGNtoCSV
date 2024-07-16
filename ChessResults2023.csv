@@ -1,4 +1,4 @@
-ECO,Opening Category,OpeningType,Games,BlackWins,BlackWinRate,AvgWhiteElo,AvgBlackElo,EloDiff
+ECO,OpeningCategory,OpeningType,Games,BlackWins,BlackWinRate,AvgWhiteElo,AvgBlackElo,EloDiff
 C00e,C,King's Pawn Opening,175,95.0,0.54,2187.97,2148.01,39.96
 C11i,C,King's Pawn Opening,499,252.5,0.51,2250.04,2227.67,22.37
 B34a,B,King's Pawn Opening,26,12.5,0.48,1796.0,1907.69,-111.69

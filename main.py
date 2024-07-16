@@ -6,7 +6,7 @@
 import shlex
 from opening import Opening
 
-DB_VARS = ['ECO', 'Opening Category'
+DB_VARS = ['ECO', 'OpeningCategory'
     , 'OpeningType', 'Games', 'BlackWins', 'BlackWinRate', 'AvgWhiteElo', 'AvgBlackElo', 'EloDiff']
 
 
