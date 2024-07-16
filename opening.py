@@ -2,17 +2,17 @@ class Opening:
     def __init__(self, eco, result, white_elo, black_elo):
         self.eco = eco
         self.opening_category = eco[0]
-        self._decodeEco(self.eco) # set opening type
-        self.games = 1
-        self.black_wins = result
+        self.opening_type = self._decodeEco(self.eco)  # set opening type
+        self.games = 0
+        self.black_wins = 0
+        self._parseResult(result)  # update black_wins
         self._white_elo_subtotal = white_elo
         self._black_elo_subtotal = black_elo
         self._recalc()
         self.changed = False
 
     def add_game(self, result, white_elo, black_elo):
-        self.black_wins += result
-        self.games += 1
+        self._parseResult(result)  # update black_wins
         self._white_elo_subtotal += white_elo
         self._black_elo_subtotal += black_elo
         # set flag that averages needs to be recalculated
@@ -61,16 +61,28 @@ class Opening:
 
     def _decodeEco(self, eco):
         if eco[0] == 'B' or eco[0] == 'C':
-            self.opening_type = "King's Pawn Opening"
+            return "King's Pawn Opening"
         elif eco[0] == 'D' or eco[0] == 'E':
-            self.opening_type = "Queen's Pawn Opening"
+            return "Queen's Pawn Opening"
         elif eco[0] == 'A':
             if int(eco[1]) >= 4:
-                self.opening_type = "Queen's Pawn Opening"
+                return "Queen's Pawn Opening"
             else:
-                self.opening_type = "Other"
+                return "Other"
         else:
-            self.opening_type = "NA"
+            return "NA"
+
+    def _parseResult(self, result):
+        if result == '1-0':
+            self.games += 1
+            # self.black_wins += 0
+        elif result == '0-1':
+            self.games += 1
+            self.black_wins += 1
+        else:
+            self.games += 1
+            self.black_wins += 0.5
+
 
     def _recalc(self):
         self.black_win_rate = round(self.black_wins / self.games, 2)

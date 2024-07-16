@@ -1,7 +1,4 @@
-# This is a sample Python script.
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 import shlex
 from opening import Opening
@@ -23,18 +20,12 @@ def init_output(output_file):
     file.close()
 
 
-def parse_result(result):
-    if result == '1-0':
-        return 1.0
-    elif result == '0-1':
-        return 0.0
-    else:
-        return 0.5
+
 
 
 def parse_file_into_openings(input_file, openings):
     # initialize local variables
-    result = 0
+    result = ''
     white_elo = 0
     black_elo = 0
     eco = ''
@@ -52,7 +43,7 @@ def parse_file_into_openings(input_file, openings):
             if not words:
                 continue
             if words[0] == 'Result':
-                result = parse_result(words[1])
+                result = words[1]
             elif words[0] == 'WhiteElo':
                 white_elo = int(words[1])
             elif words[0] == 'BlackElo':
@@ -68,7 +59,7 @@ def parse_file_into_openings(input_file, openings):
                     else:
                         openings[eco] = Opening(eco, result, white_elo, black_elo)
                 # reinitialize local variables
-                result = 0
+                result = ''
                 white_elo = 0
                 black_elo = 0
                 eco = ''
