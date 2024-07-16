@@ -6,8 +6,7 @@
 import shlex
 from opening import Opening
 
-DB_VARS = ['ECO', 'OpeningCategory'
-    , 'OpeningType', 'Games', 'BlackWins', 'BlackWinRate', 'AvgWhiteElo', 'AvgBlackElo', 'EloDiff']
+DB_VARS = ['ECO', 'OpeningCategory', 'OpeningType', 'Games', 'BlackWins', 'BlackWinRate', 'AvgWhiteElo', 'AvgBlackElo', 'EloDiff']
 
 
 def init_output(output_file):
@@ -39,15 +38,12 @@ def parse_file_into_openings(input_file, openings):
     white_elo = 0
     black_elo = 0
     eco = ''
-    # line_nums = 0
-    # games = 0
 
     # open input file
     with open(input_file, encoding="utf8", errors='ignore') as f:
         # loop through lines
         while True:
             line = f.readline()
-            # line_nums += 1
             # break out of loop if no more lines
             if not line:
                 break
@@ -55,8 +51,6 @@ def parse_file_into_openings(input_file, openings):
             words = shlex.split(clean_line)
             if not words:
                 continue
-            #if not words[0].isnumeric():
-                #print(words[0], words[1])
             if words[0] == 'Result':
                 result = parse_result(words[1])
             elif words[0] == 'WhiteElo':
@@ -66,8 +60,6 @@ def parse_file_into_openings(input_file, openings):
             elif words[0] == 'ECO':
                 eco = words[1]
             elif words[0].isnumeric():  # reached end of game record
-                # games += 1
-                #print(games)
                 if eco:  # make sure record has an ECO recorded
                     # add game data if opening already recorded
                     if eco in openings:
@@ -82,9 +74,6 @@ def parse_file_into_openings(input_file, openings):
                 eco = ''
             else:
                 continue
-            # if games >= 1000:
-            #     break
-        #print(line_nums)
 
 
 def write_csv(output_file, openings):
@@ -94,21 +83,20 @@ def write_csv(output_file, openings):
 
 
 def main():
+    # set file names
     input_file = "ChessResults2023.pgn"
     output_file = "ChessResults2023.csv"
 
+    # initialize csv file with headers
     init_output(output_file)
 
+    # initialize dictionary of openings
     openings = {}
 
+    # parse input file and feed data to openings dictionary
     parse_file_into_openings(input_file, openings)
 
-    # for opening in openings:
-    #     print(openings[opening].getEco() + ', ' + openings[opening].getOpeningType() + ', ' +
-    #           str(openings[opening].getGames()))
-
-    # print(len(openings))
-
+    # write opening records to csv file
     write_csv(output_file, openings)
 
 # Press the green button in the gutter to run the script.
