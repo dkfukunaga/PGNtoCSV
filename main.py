@@ -3,7 +3,8 @@
 import shlex
 from opening import Opening
 
-DB_VARS = ['ECO', 'OpeningCategory', 'OpeningType', 'Games', 'BlackWins', 'BlackWinRate', 'AvgWhiteElo', 'AvgBlackElo', 'EloDiff']
+DB_VARS = ['ECO', 'OpeningCategory', 'OpeningType', 'Games', 'BlackWins', 'BlackWinRate', 'AvgWhiteElo', 'AvgBlackElo',
+           'EloDiff']
 
 
 def init_output(output_file):
@@ -20,28 +21,34 @@ def init_output(output_file):
     file.close()
 
 
-
-
-
 def parse_file_into_openings(input_file, openings):
     # initialize local variables
     result = ''
     white_elo = 0
     black_elo = 0
     eco = ''
+    unknown_eco_count = 0
 
     # open input file
     with open(input_file, encoding="utf8", errors='ignore') as f:
         # loop through lines
         while True:
             line = f.readline()
+
             # break out of loop if no more lines
             if not line:
                 break
-            clean_line = line.replace('[','').replace(']','').replace('.','')
-            words = shlex.split(clean_line)
-            if not words:
+
+            # ignore empty lines
+            if line == '\n':
                 continue
+
+            # remove brackets and periods from raw line
+            clean_line = line.replace('[', '').replace(']', '').replace('.', '')
+            # split into tokens, maintaining substrings enclosed by quotation marks as whole tokens
+            words = shlex.split(clean_line)
+
+            # check for the data fields we're interested in and save the associated data
             if words[0] == 'Result':
                 result = words[1]
             elif words[0] == 'WhiteElo':
@@ -50,21 +57,29 @@ def parse_file_into_openings(input_file, openings):
                 black_elo = int(words[1])
             elif words[0] == 'ECO':
                 eco = words[1]
-            elif words[0].isnumeric():  # reached end of game record
-                if eco:  # make sure record has an ECO recorded
+            # use list of moves to indicate the end of a game record
+            elif words[0].isnumeric():
+                # make sure record has an ECO recorded
+                if eco:
                     # add game data if opening already recorded
                     if eco in openings:
                         openings[eco].add_game(result, white_elo, black_elo)
                     # otherwise create new opening
                     else:
                         openings[eco] = Opening(eco, result, white_elo, black_elo)
+                else:
+                    # running count of games with no listed ECO
+                    unknown_eco_count += 1
+
                 # reinitialize local variables
                 result = ''
                 white_elo = 0
                 black_elo = 0
                 eco = ''
+            # other data fields are ignored
             else:
                 continue
+    print("unknown eco count: " + str(unknown_eco_count))
 
 
 def write_csv(output_file, openings):
@@ -90,7 +105,7 @@ def main():
     # write opening records to csv file
     write_csv(output_file, openings)
 
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     main()
-

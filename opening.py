@@ -59,7 +59,8 @@ class Opening:
             + str(self.getBlackWinRate()) + ',' + str(self.getAvgWhiteElo()) \
             + ',' + str(self.getAvgBlackElo()) + ',' + str(self.getAvgEloDiff()) + '\n'
 
-    def _decodeEco(self, eco):
+    @staticmethod
+    def _decodeEco(eco):
         if eco[0] == 'B' or eco[0] == 'C':
             return "King's Pawn Opening"
         elif eco[0] == 'D' or eco[0] == 'E':
@@ -82,7 +83,6 @@ class Opening:
         else:
             self.games += 1
             self.black_wins += 0.5
-
 
     def _recalc(self):
         self.black_win_rate = round(self.black_wins / self.games, 2)
